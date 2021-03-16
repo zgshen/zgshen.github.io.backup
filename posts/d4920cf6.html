@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>内部类相关——定义、匿名内部类、回调实现及静态内部类 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Java基础">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">内部类相关——定义、匿名内部类、回调实现及静态内部类</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2017-02-23</span>
+  </div>
+  <div class="post-content">
+    <blockquote>
+<p>内部类，顾名思义就是在一个类中的类。内部类可以访问所在类的数据，包括私有数据，而又可以对其他类隐藏，在快速实现回调函数时可以使用匿名内部类，比较便捷。</p>
+</blockquote>
+<p>1、以下为一个简单的内部类例子，内部类可以定义为私有以对其他类隐藏起来；可以用内部类来达到实现多继承的效果。需要注意的是，通过成员函数传入内部类的变量必须定义为final类型，以保证数据的一致性。<a id="more"></a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Walk</span></span>&#123;</span><br><span class="line">	<span class="comment">//private私有类，继承Walk和Eat</span></span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">LittleCat</span> <span class="keyword">extends</span> <span class="title">Eat</span> </span>&#123;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			System.out.println(<span class="string">"Walking....Eating...."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		LittleCat lCat = <span class="keyword">new</span> Cat().<span class="keyword">new</span> LittleCat();<span class="comment">//创建内部类对象方式，通过先创建所在外围类对象再创建内部类对象</span></span><br><span class="line">		lCat.doSomething();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">event</span><span class="params">(<span class="keyword">final</span> String name)</span> </span>&#123;</span><br><span class="line">		<span class="class"><span class="keyword">class</span> <span class="title">EatFish</span></span>&#123;</span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="comment">//name = "Tom";//在这里修改会报错，name 必须为final类型，保证数据一致</span></span><br><span class="line">				System.out.println(name);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		EatFish test = <span class="keyword">new</span> EatFish();</span><br><span class="line">		test.eat();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>两个父类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public class Walk &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public class Eat &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、匿名内部类<br>从名称可以知道匿名就是没有类名的类，匿名内部类用于快速调用接口或抽象类等等中的方法，不需要多写一个实现类来实现调用。</p>
+<p>抽象类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Dog &#123;</span><br><span class="line">	abstract void eat();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Animal &#123;</span><br><span class="line">	void eat();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class AnonymousDemo &#123;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		 </span><br><span class="line">		/**</span><br><span class="line">		 * 通过创建的一个接口或抽象类分引用，快速便捷重写需要实现的方法，不需要先写一个实现类再实例化以调用方法</span><br><span class="line">		 */</span><br><span class="line">		</span><br><span class="line">		//实现接口方式</span><br><span class="line">		Animal dog = new Animal() &#123;</span><br><span class="line">			@Override</span><br><span class="line">			public void eat() &#123;</span><br><span class="line">				System.out.println(&quot;like bone.&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		dog.eat();//向上转型的实例，直接调用重写的eat方法</span><br><span class="line">		</span><br><span class="line">		//继承抽象类的方式</span><br><span class="line">		Dog littleDog = new Dog() &#123;</span><br><span class="line">			@Override</span><br><span class="line">			void eat() &#123;</span><br><span class="line">				System.out.println(&quot;I like bone.&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		littleDog.eat();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此外，Java的回调函数式可以通过匿名内部类来实现，比如以下例子</p>
+<p>(1)封装的类和提供的接口<br>封装给别人调用的类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line">	</span><br><span class="line">	private EatFood eatFood;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 普通方式，构造传递引用</span><br><span class="line">	 */</span><br><span class="line">	public Person(EatFood eatSomething)&#123;</span><br><span class="line">		this.eatFood = eatSomething;//构造时传入引用</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 普通方式，成员函数传递引用</span><br><span class="line">	 */</span><br><span class="line">	public Person()&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setCallBack(EatFood eatSomething) &#123;</span><br><span class="line">		this.eatFood = eatSomething;//用成员函数传入引用</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//需要调用的方法</span><br><span class="line">	public void eatFood() &#123;</span><br><span class="line">		eatFood.eat();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>调用类需要的接口定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface EatFood &#123;</span><br><span class="line">	void eat();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(2)实际调用<br>一般做法都会写一个类实现接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class EatRice implements EatFood &#123;</span><br><span class="line">	@Override</span><br><span class="line">	public void eat() &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		System.out.println(&quot;It&apos;s time to eat rice.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后是实际使用的类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class PeronEatTest &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		//普通方式，构造传递引用</span><br><span class="line">		Person personOne = new Person(new EatRice());//EatRice实现类方式。多写一个方法传入也可</span><br><span class="line">		personOne.eatFood();</span><br><span class="line"></span><br><span class="line">		//普通方式，成员函数传递引用</span><br><span class="line">		Person personOne = new Person();</span><br><span class="line">		EatRice eatRice = new EatRice();</span><br><span class="line">		personOne.setCallBack(eatRice);</span><br><span class="line">		personOne.eatFood();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果使用匿名内部类就便捷了许多<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class PeronEatTest &#123;</span><br><span class="line">	public static void main(String[] args) &#123;	</span><br><span class="line">		Person personTwo = new Person(new EatFood() &#123;</span><br><span class="line">			@Override</span><br><span class="line">			public void eat() &#123;</span><br><span class="line">				// TODO Auto-generated method stub</span><br><span class="line">				System.out.println(&quot;It&apos;s time to eat rice.&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		personTwo.eatFood();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3、静态内部类<br>创建是不需要依赖于外围类，但也不能使用任何外围类的非static成员变量和方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public class Cat&#123;</span><br><span class="line">	</span><br><span class="line">	private String str = &quot;cat&quot;;</span><br><span class="line">	private static String str_static = &quot;cat&quot;;</span><br><span class="line">	</span><br><span class="line">	private class LittleCat&#123;</span><br><span class="line">		//public static String str_test = &quot;test&quot;;//错误，非静态内部类变量不能为静态</span><br><span class="line">		public static final String str_test = &quot;test&quot;;//但加上final就可以</span><br><span class="line">		public void doSomething() &#123;</span><br><span class="line">			str = &quot;little cat&quot;;</span><br><span class="line">			System.out.println(&quot;Walking....Eating....&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	static class BigCat&#123;</span><br><span class="line">		public void doSomething() &#123;</span><br><span class="line">			//str = &quot;little cat&quot;;//错误，静态内部类反问外围非静态变量和方法</span><br><span class="line">			str_static = &quot;big cat&quot;;</span><br><span class="line">			System.out.println(&quot;I am a big cat.&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		LittleCat lCat = new Cat().new LittleCat();//依赖外围类</span><br><span class="line">		lCat.doSomething();</span><br><span class="line">		</span><br><span class="line">		BigCat bigCat = new BigCat();//不依赖外围类</span><br><span class="line">		bigCat.doSomething();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Java基础/">Java基础</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

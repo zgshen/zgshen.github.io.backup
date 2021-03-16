@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>类与对象 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Java基础">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">类与对象</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-07-09</span>
+  </div>
+  <div class="post-content">
+    <p>一、Java的对象和类<br>Java作为一种面向对象语言，有类、对象、实例、方法、继承、重载、抽象、多态、封装的基本概念。<br>1、类<br>(1)类是Java的核心和本质，封装、继承、多态和抽象几大特性都离不开类，可以把类看成是对象的模板。<br>(2)类中的变量。包括局部变量、全局变量和类变量。<br>    局部变量：定义在方法中的变量，作用域为本方法中。<br>    成员变量：定义在类中方法外的变量，作用域为本类。<br>    类变量(静态变量)：类变量也声明在类中，方法体之外，但必须声明为static类型(static表示全局的、静态的)。<br>    <a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author shen</span><br><span class="line"> * @desc test</span><br><span class="line"> * @date 2016年7月10日</span><br><span class="line"> */</span><br><span class="line">public class Book &#123;</span><br><span class="line">	</span><br><span class="line">	static int num = 0;//类变量</span><br><span class="line">	static final String type = &quot;children&quot;;//用final变量只能被初始化一次，之后不能再赋值</span><br><span class="line">	</span><br><span class="line">	String str=&quot;this is a book&quot;;//实例变量</span><br><span class="line">	public void borrow()&#123;</span><br><span class="line">		int i = 0;//局部变量</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void rend()&#123;</span><br><span class="line">		//静态方法，无需创建对象就能使用</span><br><span class="line">		System.out.println(&quot;this is a static method.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		rend();//直接调用</span><br><span class="line">		System.out.println(&quot;this is a main function.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	static &#123;</span><br><span class="line">		//静态代码块，类加载时调用</span><br><span class="line">		System.out.println(&quot;this is a static code block.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：<br><img src="http://img.blog.csdn.net/20160710185420433" alt="这里写图片描述"><br>(3)构造方法<br>        每个类都有构造方法，如果没有显式定义构造方法，编译器会默认为类创建一个不带参的构造方法(若子类继承有带参构造方法的父类，需要显式调用父类构造方法)。<br>        构造方法名必须与类名相同，一个类中可以有多个构造方法(参数不同)，创建对象时至少一个构造方法。<br>2、对象<br>    对象的创建：声明，声明类的类型和名称；实例化，使用new创建一个对象；初始化，创建对象时会调用构造方法初始化对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author shen</span><br><span class="line"> * @desc test</span><br><span class="line"> * @date 2016年7月10日</span><br><span class="line"> */</span><br><span class="line">public class User &#123;</span><br><span class="line">	</span><br><span class="line">	private String type = &quot;student&quot;;</span><br><span class="line">	private String name;//私有属性只能在本类获取到</span><br><span class="line">	private int age;</span><br><span class="line">	public int height;//公有属性其他类也能获取到</span><br><span class="line">	</span><br><span class="line">	public int getHeight() &#123;</span><br><span class="line">		return height;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setHeight(int height) &#123;</span><br><span class="line">		this.height = height;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//Javabean的规范，通过getter和setter对数据进行封装</span><br><span class="line">	public String getType() &#123;</span><br><span class="line">		return type;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setType(String type) &#123;</span><br><span class="line">		this.type = type;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String getName() &#123;</span><br><span class="line">		return name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public int getAge() &#123;</span><br><span class="line">		return age;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setAge(int age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public User()&#123;</span><br><span class="line">		//无参构造方法</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public User(String num)&#123;</span><br><span class="line">		//带参构造</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public User(String name,int age)&#123;</span><br><span class="line">		//参数个数不同的构造</span><br><span class="line">		this.name = name;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//普通方法</span><br><span class="line">	public void borrow(String bookName)&#123;</span><br><span class="line">		//bookName为方法体中的局部变量</span><br><span class="line">		System.out.println(this.name + &quot; borrow a book :&quot; + bookName );</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		User jack = new User();//默认的无参构造创建对象</span><br><span class="line">		jack.age = 20;//私有属性，只能在本类使用这种方式</span><br><span class="line">		jack.name = &quot;jack&quot;;</span><br><span class="line">		</span><br><span class="line">		//公有属性其他类也能获取到，暴露了数据细节。将属性定义为private并使用getter和setter方法隐藏数据的细节(Java的封装特性)</span><br><span class="line">		jack.height = 170;</span><br><span class="line">		jack.borrow(&quot;Java code&quot;);</span><br><span class="line">		System.out.println(jack.type);</span><br><span class="line">		</span><br><span class="line">		User jane = new User();</span><br><span class="line">		jane.setAge(19);//Javabean规范，实现对数据细节的隐藏封装</span><br><span class="line">		jane.setName(&quot;jane&quot;);</span><br><span class="line">		jane.setType(&quot;teacher&quot;);</span><br><span class="line">		jane.borrow(&quot;C prime plus&quot;);</span><br><span class="line">		System.out.println(jane.type);</span><br><span class="line">		</span><br><span class="line">		User tom = new User(&quot;tom&quot;, 21);//使用带参构造创建对象</span><br><span class="line">		tom.borrow(&quot;C++ prime plus&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：<br><img src="http://img.blog.csdn.net/20160710185740775" alt="这里写图片描述"></p>
+<p>二、基本规则<br>1、一个源文件中只能有一个public类，可以有多个非public类，并且public类名必须与源文件名称相同<br>2、包与import语句<br>(1)Java包主要是用来给类分类，创建包使用package语句实现。包也有基本的命名规则，根据公司或个人名、项目名、模块名等命名。<br>(2)import语句。import语句就是用来提供一个合理的路径，使得编译器可以找到某个类，有点类似与c的头文件和c++的命名空间。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Java基础/">Java基础</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>微服务要点梳理 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="面试">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">微服务要点梳理</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2020-12-22</span>
+  </div>
+  <div class="post-content">
+    <p>微服务是一种用于构建应用的架构方案。微服务架构有别于更为传统的单体式方案，可将应用拆分成多个核心功能。每个功能都被称为一项服务，可以单独构建和部署，这意味着各项服务在工作（和出现故障）时不会相互影响。<br><a id="more"></a></p>
+<h3 id="1-实施微服务好处"><a href="#1-实施微服务好处" class="headerlink" title="1.实施微服务好处"></a>1.实施微服务好处</h3><ul>
+<li>针对特定服务发布，影响小，风险小，成本低</li>
+<li>频繁发布版本，快速交付需求</li>
+<li>低成本扩容，弹性伸缩，适应云环境</li>
+</ul>
+<h3 id="2-带来的问题"><a href="#2-带来的问题" class="headerlink" title="2.带来的问题"></a>2.带来的问题</h3><ul>
+<li>分布式系统的复杂性</li>
+<li>部署，测试和监控的成本问题</li>
+<li>分布式事务和CAP的相关问题</li>
+</ul>
+<h3 id="4-Spring-Cloud-组件"><a href="#4-Spring-Cloud-组件" class="headerlink" title="4.Spring Cloud 组件"></a>4.Spring Cloud 组件</h3><ul>
+<li>注册中心 Eureka，其他的还有 Zookeeper、Consul 和 Nacos。用于服务发现；</li>
+<li>配置中心 Spring Cloud Config</li>
+<li>网关 Spring Gateway 和 Zuul</li>
+<li>客户端负载均衡 Ribbon，默认策略是轮询</li>
+<li>断路器 Hystix</li>
+<li>RPC 客户端 Feign</li>
+</ul>
+<h3 id="5-限流方法（流量控制、熔断降级、系统负载保护）"><a href="#5-限流方法（流量控制、熔断降级、系统负载保护）" class="headerlink" title="5.限流方法（流量控制、熔断降级、系统负载保护）"></a>5.限流方法（流量控制、熔断降级、系统负载保护）</h3><ul>
+<li>Hystrix 熔断策略基于异常比率；限流基于  QPS，支持基于调用关系的限流</li>
+<li>sentinel  熔断策略基于响应时间、异常比率、异常数；限流支持有限（并发线程数或信号量大小）</li>
+<li>Redis + Lua 脚本。<br>  判断 key 是否存在，若不存在设置 key 过期时间和对应 value 为1；<br>  若存在判断在过期时间内 key 对应的 value 值是否大于限制数量，大于返回 false，小于自增加2并返回 true。</li>
+</ul>
+<h3 id="6-限流算法"><a href="#6-限流算法" class="headerlink" title="6.限流算法"></a>6.限流算法</h3><ul>
+<li>计数器（固定窗口）</li>
+<li>滑动窗口（Sentinel）</li>
+<li>漏桶（Java 线程池）</li>
+<li>令牌桶（Guava RateLimiter）</li>
+</ul>
+<h3 id="7-负载均衡方法"><a href="#7-负载均衡方法" class="headerlink" title="7.负载均衡方法"></a>7.负载均衡方法</h3><ul>
+<li>随机</li>
+<li>轮询</li>
+<li>加权响应：响应时间短的权重就大</li>
+</ul>
+<h3 id="8-分布式锁"><a href="#8-分布式锁" class="headerlink" title="8.分布式锁"></a>8.分布式锁</h3><ul>
+<li>数据库级别：读频繁用客观锁，写频繁用悲观锁<ul>
+<li>乐观锁：基于版本号实现</li>
+<li>悲观锁：基于数据库级别的 for update</li>
+</ul>
+</li>
+<li>基于 Redis 原子性操作，使用 setnx 和 expire 实现</li>
+<li>基于 Rdisson 框架实现</li>
+<li>基于 Zookeeper，使用 InterprocessMutex 实现</li>
+</ul>
+<h3 id="10-CAP理论"><a href="#10-CAP理论" class="headerlink" title="10.CAP理论"></a>10.CAP理论</h3><ul>
+<li>Consistency 一致性：写之后的操作，必须返回该值。分布式系统中任意一个节点都会查询到相同的信息。</li>
+<li>Availability 可用性：正常响应时间，服务一直可用。只要收到用户请求，服务器就必须做出响应。</li>
+<li>Partition tolerance 分区容错性：区之间通讯可能失败，容忍某些区奔溃。当部分节点出现问题的时候，系统依然能正常堆外提供服务。</li>
+</ul>
+<h3 id="11-BASE-理论"><a href="#11-BASE-理论" class="headerlink" title="11.BASE 理论"></a>11.BASE 理论</h3><ul>
+<li>Basically Available（基本可用）</li>
+<li>Soft state（软状态）</li>
+<li>Eventually consistent（最终一致性）</li>
+</ul>
+<h3 id="12-分布式事务"><a href="#12-分布式事务" class="headerlink" title="12.分布式事务"></a>12.分布式事务</h3><p>分布式事务是指事务的参与者、支持事务的服务器、资源服务器以及事务管理器分别位于不同的分布式系统的不同节点之上。常用的解决方案有：</p>
+<ul>
+<li>基于 XA 协议的 2PC （两阶段提交）和 3PC。Seata 常用模式</li>
+<li>基于业务层的 TCC 方案。Try Confirm Cancel 三阶段，代码实现复杂度相对较高</li>
+<li>使用应用消息队列 + 本地消息表实现的最终一致性方案。跨行转账可通过该方案实现。目前市面上支持该方案的 mq 只有阿里的 rocketmq，单消息队列可用于：<ul>
+<li>用户注册成功后发送邮件</li>
+<li>电商系统给用户发送优惠券</li>
+</ul>
+</li>
+<li>最大努力通知。例如支付回调和其他一些回调通知</li>
+</ul>
+<h3 id="13-分布式事务框架"><a href="#13-分布式事务框架" class="headerlink" title="13.分布式事务框架"></a>13.分布式事务框架</h3><ul>
+<li>Seata：提供 AT、TCC、SAGA 和 XA 事务模式</li>
+<li>TX-LCN：提供LCN（2pc）、TCC、TXC 三种事务模式</li>
+<li>Raincat </li>
+</ul>
+<h3 id="14-Seata-4种事务模式"><a href="#14-Seata-4种事务模式" class="headerlink" title="14.Seata 4种事务模式"></a>14.Seata 4种事务模式</h3><p>（AT、TCC、Saga、XA）模式分析<br>四种分布式事务模式，分别在不同的时间被提出，每种模式都有它的适用场景。</p>
+<ul>
+<li>AT 模式是无侵入的分布式事务解决方案，适用于不希望对业务进行改造的场景，几乎0学习成本。</li>
+<li>TCC 模式是高性能分布式事务解决方案，适用于核心系统等对性能有很高要求的场景。</li>
+<li>Saga 模式是长事务解决方案，适用于业务流程长且需要保证事务最终一致性的业务系统，Saga 模式一阶段就会提交本地事务，无锁，长流程情况下可以保证性能，多用于渠道层、集成层业务系统。事务参与者可能是其它公司的服务或者是遗留系统的服务，无法进行改造和提供 TCC 要求的接口，也可以使用 Saga 模式。</li>
+<li>XA模式是分布式强一致性的解决方案，但性能低而使用较少。</li>
+</ul>
+<h3 id="15-分布式链路跟踪"><a href="#15-分布式链路跟踪" class="headerlink" title="15.分布式链路跟踪"></a>15.分布式链路跟踪</h3><ul>
+<li>Spring Cloud Sleuth</li>
+<li>ZipKin</li>
+</ul>
+<h3 id="16-分布式-id-生成方式"><a href="#16-分布式-id-生成方式" class="headerlink" title="16.分布式 id 生成方式"></a>16.分布式 id 生成方式</h3><ul>
+<li>UUID</li>
+<li>数据库自增 ID</li>
+<li>数据库自增 ID</li>
+<li>号段模式</li>
+<li>Redis</li>
+<li>雪花算法</li>
+</ul>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

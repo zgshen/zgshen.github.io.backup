@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Mysql清除错误临时表 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="技术">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Mysql清除错误临时表</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2019-09-26</span>
+  </div>
+  <div class="post-content">
+    <p>去年对数据库一个大表做了 optimize 操作，由于不了解具体操作就草草执行了。此操作会拷贝原表数据到临时表，如果此时硬盘空间不够，就会报错，或者表太大，执行时间将及其漫长，反正哪种都是不可接受的。<br><a id="more"></a><br>这是当时的日志<br><img src="https://user-images.githubusercontent.com/20520272/65656809-c0057000-e053-11e9-82ba-399e98adcd48.png" alt="image"></p>
+<p>当时就把进程 kill 掉了，但是留下了一个 75G 没有用的临时表，后来因为服务器加了硬盘空间，就没有去管它。最近硬盘又快占满，这个 75G 废弃文件实在碍眼，就着手看看怎么安全删除。</p>
+<p>首先暴力 rm 必定不可取，参考互联网资料，这个应该是官方的一个解决方案<br><a href="https://mariadb.com/resources/blog/get-rid-of-orphaned-innodb-temporary-tables-the-right-way/" target="_blank" rel="noopener">https://mariadb.com/resources/blog/get-rid-of-orphaned-innodb-temporary-tables-the-right-way/</a></p>
+<p><img src="https://user-images.githubusercontent.com/20520272/65656922-2094ad00-e054-11e9-8c49-2ee8d50397e6.png" alt="image"></p>
+<p>试着按参考链接执行建同名表，正常建表命令肯定不会影响数据库，找到原来的表结构建表<br>CREATE TABLE <code>#sql-5df6_36c</code> (<br>  <code>id</code> bigint(32) NOT NULL AUTO_INCREMENT,<br>  <code>card</code> varchar(50) DEFAULT NULL COMMENT ‘卡券号’,<br>  <code>createTime</code> datetime DEFAULT NULL COMMENT ‘创建时间’,<br>  <code>status</code> varchar(1) DEFAULT NULL COMMENT ‘状态’,<br>  <code>posData</code> text COMMENT ‘POS请求的数据’,<br>  <code>ffData</code> text COMMENT ‘飞凡返回的data’,<br>  <code>reason</code> varchar(500) DEFAULT NULL,<br>  PRIMARY KEY (<code>id</code>),<br>  KEY <code>card_index</code> (<code>card</code>)<br>) ENGINE=InnoDB AUTO_INCREMENT=152943355 DEFAULT CHARSET=utf8;</p>
+<p><img src="https://user-images.githubusercontent.com/20520272/65656942-2e4a3280-e054-11e9-90e6-6f338e8b5416.png" alt="image"></p>
+<p>结果残缺的 #sql-5df6_36c.frm 被自动删掉<br><img src="https://user-images.githubusercontent.com/20520272/65656964-3ace8b00-e054-11e9-8237-80a89a339ce7.png" alt="image"></p>
+<p>接下来剩下缺失表结构的大文件<br>cp cc_card_log.frm /app/mysql/data/watsons_coupon/#sql-ib2460-3936078760.frm<br>复制表结构命名与临时表相同</p>
+<p><img src="https://user-images.githubusercontent.com/20520272/65656989-4ae66a80-e054-11e9-9cd5-c9d36f4b2757.png" alt="image"></p>
+<p>再 drop 表，提示表不存在<br><img src="https://user-images.githubusercontent.com/20520272/65657013-5cc80d80-e054-11e9-9c0a-100e0467ce8b.png" alt="image"></p>
+<p>先再建表<br><img src="https://user-images.githubusercontent.com/20520272/65657025-66ea0c00-e054-11e9-9bc2-4bb41efbe406.png" alt="image"></p>
+<p>可以看到与临时表同名多会生成这两个文件，原来的两个文件也还在的<br><img src="https://user-images.githubusercontent.com/20520272/65657033-70737400-e054-11e9-9e00-4b53ba93e40f.png" alt="image"></p>
+<p>再试试 drop 表<br><img src="https://user-images.githubusercontent.com/20520272/65657048-7cf7cc80-e054-11e9-9c28-189f9c8de552.png" alt="image"></p>
+<p>发现不行，四个文件都还在<br>再尝试<br><img src="https://user-images.githubusercontent.com/20520272/65657062-8aad5200-e054-11e9-920a-8cd054a5ccc1.png" alt="image"></p>
+<p>@0023sql@002dib2460@002d3936078760 两个文件倒是删掉了</p>
+<p>#sql-ib2460-3936078760 两个还好好的<br>仔细一看</p>
+<p>#sql-ib2460-3936078760.frm  用户组用户都是 root ，cp 的时候用了 sudo 执行，需要授权用户</p>
+<p>chown mysql:mysql #sql-ib2460-3936078760.frm<br><img src="https://user-images.githubusercontent.com/20520272/65657080-9ac53180-e054-11e9-939e-6c5c0cdb95ce.png" alt="image"></p>
+<p>再 drop 表<br><img src="https://user-images.githubusercontent.com/20520272/65657103-a9134d80-e054-11e9-8dcd-88cecd594ce1.png" alt="image"></p>
+<p>75G文件5s多drop掉，总算删掉了</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

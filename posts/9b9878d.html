@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>用本地服务器解决node-sass安装失败问题 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="其他">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">用本地服务器解决node-sass安装失败问题</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2017-08-20</span>
+  </div>
+  <div class="post-content">
+    <p>今天要用到node-sass这东西，使用命令 <code>npm install node-sass --save</code> 安装。然而搞半天始终下载不来，换成淘宝的镜像都不行，因为下载时还会去github下载一个 <code>win32-x64-48_binding.node</code> 的包，然后下不来就一直卡着最后失败。<a id="more"></a><br>一种解决方法就是根据下载失败提示的链接直接把那个二进制包下载下来，然后放在本地服务器目录下，比如可以根据失败提示的版本号在Nginx的html目录下以版本号建个文件夹放进去，像这样 <code>nginx-1.10.1\html\v4.5.3\win32-x64-48_binding.node</code> ,然后执行 <code>npm install node-sass --save-dev --sass-binary-site=http://localhost:8090/ --registry=https://registry.npm.taobao.org</code> 端口号为Nginx设置的端口号， <code>v4.5.3\win32-x64-48_binding.node</code> 这一串不用加，这样 <code>win32-x64-48_binding.node</code> 这个包就直接从本地服务器下载了。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/其他/">其他</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

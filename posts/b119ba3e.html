@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>MySQL入门接触记录--从安装到Java通过JDBC连接MySQL数据库 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="数据库">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">MySQL入门接触记录--从安装到Java通过JDBC连接MySQL数据库</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2015-12-12</span>
+  </div>
+  <div class="post-content">
+    <p>一、安装MySQL<br>1.本人用的版本是mysql-5.6.24-winx64解压免装版，链接：<br><a href="http://xiazai.zol.com.cn/detail/4/33431.shtml" target="_blank" rel="noopener">http://xiazai.zol.com.cn/detail/4/33431.shtml</a><br>解压后找到my-default.ini文件，复制改名为my.ini，修改添加以下语句：<a id="more"></a><br>[client]<br>port=3306<br>default-character-set=utf8</p>
+<p>[mysqld]<br>port=3306<br>character_set_server=utf8</p>
+<p>#以下路径为你解压到的文件夹<br>basedir = D:\Program Files\mysql-5.6.24-winx64<br>datadir = D:\Program Files\mysql-5.6.24-winx64\data<br>sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES<br>2.配置环境变量：计算机-属性-高级系统设置-高级-环境变量，在Path中添加<br>D:\Program Files\mysql-5.6.24-winx64\bin<br>路径依然根据自己所解压到的路径决定，注意添加时前面用；分号隔开。<br>3.win+r进dos，cd到解压文件目录的bin文件下<br>安装服务：mysqld -install<br>启动服务:net start mysql<br>如果要删除服务，命令为：mysqld -remove<br>安装结束———-</p>
+<p>二、创建数据库和表<br>以一个简单例子为例，步骤如下:<br>win+r进dos并cd到解压路径的bin文件下，执行mysql -uroot -p<br>因为初始密码为空，直接回车，如图</p>
+<p>show databases;  显示目前所有的数据库<br>create database 库名;  因为之前person已经创建过，所有提示存在<br>创建完我们使用它，use person;</p>
+<p>接着创建一个表名student的表,有两个简单的属性, 命令:create table &lt;表名&gt; (&lt;字段名 1&gt; &lt;类型 1&gt; [,..&lt;字段名 n&gt; &lt;类型 n&gt;]); 具体如下:</p>
+<p>查看表结构命令: show columns from 表名;<br>插入数据命令:insert into &lt;表名&gt; [( &lt;字段名 1&gt;[,..&lt;字段名 n &gt; ])] values ( 值 1 )[, ( 值 n )]<br>以下随便插入两个<br>select * from 表名;  显示表所有内容</p>
+<p>三、在eclipse上通过JDBC连接MySQl数据库<br>1.下载对应MySQL的驱动包 <a href="http://dev.mysql.com/downloads/connector/j/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/connector/j/</a><br>解压驱动包，eclipse新建一个java工程MysqlDemo，复制驱动包的.jar文件，在java工程右键paste，接着在.jar包右键Build Path - Configure Build Path,这样驱动就加载进来了</p>
+<p>测试程序参考自<a href="http://qq163230530.blog.163.com/blog/static/4289250620081186262719/" target="_blank" rel="noopener">http://qq163230530.blog.163.com/blog/static/4289250620081186262719/</a><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MysqlDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//声明Connection对象</span></span><br><span class="line">        Connection con;</span><br><span class="line">        <span class="comment">//驱动程序名</span></span><br><span class="line">        String driver = <span class="string">"com.mysql.jdbc.Driver"</span>;</span><br><span class="line">        <span class="comment">//URL指向要访问的数据库名mydata</span></span><br><span class="line">        String url = <span class="string">"jdbc:mysql://localhost:3306/person"</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的用户名</span></span><br><span class="line">        String user = <span class="string">"root"</span>;</span><br><span class="line">        <span class="comment">//MySQL配置时的密码</span></span><br><span class="line">        String password = <span class="string">""</span>;</span><br><span class="line">        <span class="comment">//遍历查询结果集</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//加载驱动程序</span></span><br><span class="line">            Class.forName(driver);</span><br><span class="line">            <span class="comment">//1.getConnection()方法，连接MySQL数据库！！</span></span><br><span class="line">            con = DriverManager.getConnection(url,user,password);</span><br><span class="line">            <span class="keyword">if</span>(!con.isClosed())</span><br><span class="line">                System.out.println(<span class="string">"Succeeded connecting to the Database!"</span>);</span><br><span class="line">            <span class="comment">//2.创建statement类对象，用来执行SQL语句！！</span></span><br><span class="line">            Statement statement = con.createStatement();</span><br><span class="line">            <span class="comment">//要执行的SQL语句</span></span><br><span class="line">            String sql = <span class="string">"select * from student"</span>;</span><br><span class="line">            <span class="comment">//3.ResultSet类，用来存放获取的结果集！！</span></span><br><span class="line">            ResultSet rs = statement.executeQuery(sql);</span><br><span class="line">            System.out.println(<span class="string">"-----------------"</span>);</span><br><span class="line">            System.out.println(<span class="string">"执行结果如下所示:"</span>);  </span><br><span class="line">            System.out.println(<span class="string">"-----------------"</span>);  </span><br><span class="line">            System.out.println(<span class="string">" 学号"</span> + <span class="string">"\t"</span> + <span class="string">" 姓名"</span>);  </span><br><span class="line">            System.out.println(<span class="string">"-----------------"</span>);  </span><br><span class="line">             </span><br><span class="line">            String name = <span class="keyword">null</span>;</span><br><span class="line">            String id = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">                <span class="comment">//获取stuname这列数据</span></span><br><span class="line">                name = rs.getString(<span class="string">"name"</span>);</span><br><span class="line">                <span class="comment">//获取stuid这列数据</span></span><br><span class="line">                id = rs.getString(<span class="string">"id"</span>);</span><br><span class="line">                <span class="comment">//首先使用ISO-8859-1字符集将name解码为字节序列并将结果存储新的字节数组中。</span></span><br><span class="line">                <span class="comment">//然后使用GB2312字符集解码指定的字节数组。</span></span><br><span class="line">                name = <span class="keyword">new</span> String(name.getBytes(<span class="string">"ISO-8859-1"</span>),<span class="string">"gb2312"</span>);</span><br><span class="line">                <span class="comment">//输出结果</span></span><br><span class="line">                System.out.println(id + <span class="string">"\t"</span> + name);</span><br><span class="line">            &#125;</span><br><span class="line">            rs.close();</span><br><span class="line">            con.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(ClassNotFoundException e) &#123;   </span><br><span class="line">            <span class="comment">//数据库驱动类异常处理</span></span><br><span class="line">            System.out.println(<span class="string">"Sorry,can`t find the Driver!"</span>);   </span><br><span class="line">            e.printStackTrace();   </span><br><span class="line">            &#125; <span class="keyword">catch</span>(SQLException e) &#123;</span><br><span class="line">            <span class="comment">//数据库连接失败异常处理</span></span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"数据库数据成功获取！！"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>run结果</p>
+<p>印象流程大概这样，水平有限，记录。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/数据库/">数据库</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

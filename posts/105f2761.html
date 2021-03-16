@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Mysql切换表和删除大表操作备忘 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="技术">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Mysql切换表和删除大表操作备忘</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-12-15</span>
+  </div>
+  <div class="post-content">
+    <p>线上有一张日志表累计了太多数据，占用了服务器100多G的内存，需要把历史的数据清除掉，腾出空间。直接删除表的记录 Mysql 是不会自动归还硬盘空间的，需要对表进行 <code>OPTIMIZE TABLE</code> 优化操作归还空间，但此操作会长时间锁定表，不能在线上随便操作。<br><a id="more"></a><br>另一种方式就是新建一张新的表结构与日志表相同，把新的表表名互换，切到新表。之后就可以把占空间大的旧表删除，由于 <code>drop</code> 操作删除表会有锁影响数据库其他操作，而且如果是普通硬盘删除100多G数据也不会很快，会影响服务器IO操作。因此，删除大表一般使用网络上大多人推荐的建立硬链接来进行删除的方式。</p>
+<h4 id="切换表操作"><a href="#切换表操作" class="headerlink" title="切换表操作"></a>切换表操作</h4><p>建表 <code>cc_card_log_1206</code> ，结构与表 <code>cc_card_log</code> 完全相同,把表 <code>cc_card_log_1206</code> 相互切换表名 <code>cc_card_log</code>，锁写操作，互换表名，解锁。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOCK</span> <span class="keyword">TABLES</span> cc_card_log WRITE, cc_card_log_1206 WRITE;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> cc_card_log <span class="keyword">RENAME</span> <span class="keyword">TO</span> cc_card_log_120601;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> cc_card_log_1206 <span class="keyword">RENAME</span> <span class="keyword">TO</span> cc_card_log;</span><br><span class="line"><span class="keyword">UNLOCK</span> <span class="keyword">TABLES</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="删除大表"><a href="#删除大表" class="headerlink" title="删除大表"></a>删除大表</h4><p>要删除的表已经很大<br><img src="../images/backup/1ml0e2B.png" alt="表占用" title></p>
+<p>可以利用硬链接和 <code>truncate</code> 降低 <code>drop table</code> 对线上环境的影响<br>创建方法都很简单：<br>软链接（符号链接） ln -s   source  target<br>硬链接 （实体链接）ln       source  target</p>
+<p>使用此办法前提条件，需要开启独立表空间，如果是共享表空间无法使用改方法。查询 <code>show variables like &#39;innodb_file_per%&#39;\G</code>，结果值是 ON 表明开启了。<br><img src="../images/backup/umwKspV.png" alt="查询开启表空间" title></p>
+<p>开启独立表空间表文件就都是单独的<br><img src="../images/backup/2C3DNGG.png" alt="数据库文件" title></p>
+<p>建立硬链接 <code>ln cc_card_log_1206.ibd cc_card_log_1206.ibd.hdlk</code> ，<br>之后 cc_card_log_1206.ibd 的 INODES 属性变成了2，变成2之后 drop table 就不会直接把文件删除了，只是删除了链接，避免对数据库的影响，最后再把 cc_card_log_1206.ibd 删除掉就行了。<br><img src="../images/backup/jAYLKYZ.png" alt="建立硬链接" title></p>
+<p>drop 删除表<br><img src="../images/backup/BT1TMmX.png" alt="drop操作" title></p>
+<p>物理上删除表，这里用 truncate 命令直接清空文件也可以，执行 <code>truncate -s 0 cc_card_log_120601.ibd.hdlk</code></p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/技术/">技术</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Java虚拟机JVM梳理 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="面试">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Java虚拟机JVM梳理</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2020-12-21</span>
+  </div>
+  <div class="post-content">
+    <p>对于Java开发而言，找工作面试基本上都会问道 JVM 这个知识点，其中涉及结构组成、作用原理、异常排查和参数调优等等。</p>
+<a id="more"></a>
+<h2 id="JVM-是什么"><a href="#JVM-是什么" class="headerlink" title="JVM 是什么"></a>JVM 是什么</h2><p>Java 虚拟机，Java Virtual Machine 简称 JVM。JVM 主要包括类加载器（ClassLoader）子系统、运行时数据区和执行引擎三部分。<br>Java语言使用Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。</p>
+<h2 id="JVM内存模型"><a href="#JVM内存模型" class="headerlink" title="JVM内存模型"></a>JVM内存模型</h2><p><img src="../images/20201221/0e4c7e4c7266.png" alt="7380095_1547132982417_2614605-246286b040ad10c1"></p>
+<h2 id="JVM-运行时数据区"><a href="#JVM-运行时数据区" class="headerlink" title="JVM 运行时数据区"></a>JVM 运行时数据区</h2><h4 id="虚拟机栈"><a href="#虚拟机栈" class="headerlink" title="虚拟机栈"></a>虚拟机栈</h4><p>栈是线程私有，用来存放局部变量、对象引用和常量池引用。方法执行的时候会创建一个栈帧，存储了<strong>局部变量表、操作数栈、动态链接和方法出口信息</strong>。每个方法从调用到执行完毕，对应一个栈帧在虚拟机中的入栈和出栈。<br>Java 虚拟机栈会出现两种错误：<br><em>StackOverFlowError</em> ：若 Java 虚拟机栈的内存大小不允许动态扩展，那么当线程请求栈的深度超过当前 Java 虚拟机栈的最大深度的时候，就抛出 StackOverFlowError 错误。<br><em>OutOfMemoryError</em> ： 若 Java 虚拟机堆中没有空闲内存，并且垃圾回收器也无法提供更多内存的话。就会抛出 OutOfMemoryError 错误。</p>
+<h4 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h4><p>线程私有，和虚拟机栈类似，主要为虚拟机使用到的 Native 方法服务，也会抛出 <code>StackOverFlowError</code> 和 <code>OutOfMemoryError</code>。</p>
+<h4 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h4><p>线程私有，是当前线程锁执行字节码的行号治时期，每条线程都有一个独立的程序计数器，这类内存也称为“线程私有”的内存。正在执行 java 方法的话，计数器记录的是虚拟机字节码指令的地址（当前指令的地址）。如果是 Native 方法，则为空。</p>
+<h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h4><p>线程共享，在虚拟机启动的时候创建，用于存放对象实例。通过-Xmx 和-Xms 来控制大小。<br>分为新生代、老年代。（方法区中的永久代在 JDK 1.8及之后已经移除）。<br>新生代可分为 Eden 空间、From Survivor 和 To Survivor 空间等。<br>堆容易出现的错误是 OutOfMemoryError 错误，表现有几种：</p>
+<ul>
+<li>OutOfMemoryError: GC Overhead Limit Exceeded ： 当JVM花太多时间执行垃圾回收并且只能回收很少的堆空间时，就会发生此错误。</li>
+<li>java.lang.OutOfMemoryError: Java heap space :假如在创建新的对象时, 堆内存中的空间不足以存放新创建的对象, 就会引发java.lang.OutOfMemoryError: Java heap space 错误。(和本机物理内存无关，和你配置的内存大小有关！)</li>
+</ul>
+<h4 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h4><p>线程共享，存储要加载类信息、静态变量、final 类型的常量、属性和方法信息。<br>永久代是方法区的一种实现，JDK 1.8 之前永久代还没被彻底移除的时候通常通过下面这些参数来调节方法区大小：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:PermSize=N //方法区 (永久代) 初始大小</span><br><span class="line">-XX:MaxPermSize=N //方法区 (永久代) 最大大小,超过这个值将会抛出 OutOfMemoryError 异常 `java.lang.OutOfMemoryError: PermGen`</span><br></pre></td></tr></table></figure></p>
+<p>JDK 1.8及之后永久代被彻底移除了，取代的是元空间，元空间使用的是直接内存，常用设置参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:MetaspaceSize=N //设置 Metaspace 的初始（和最小大小）</span><br><span class="line">-XX:MaxMetaspaceSize=N //设置 Metaspace 的最大大小</span><br></pre></td></tr></table></figure></p>
+<p>永久代 (PermGen) 替换为元空间 (MetaSpace)原因是永久代有一个 JVM 本身设置固定大小上限，无法进行调整，而元空间使用的是直接内存，只受本机可用内存的限制。元空间也会溢出，但比原来出现的几率小。<br>运行时常量池也在方法区中。Class 文件中除了有类的版本、字段、方法、接口等描述信息外，还有常量池表，用于存放编译期生成的各种字面量和符号引用。常量池中存放的是对象引用，而不是真实的对象。<br>JDK1.7 之前的运行时常量池，包含字符串常量池存放在方法区，JDK1.7 开始把字符串常量池和静态变量从方法区拿到了堆中。到 JDK1.8 使用元空间替代永久区来实现方法区，此时运行时常量池在元空间，字符串常量池在堆，但逻辑上讲这两个都在方法区。</p>
+<h2 id="GC-垃圾回收"><a href="#GC-垃圾回收" class="headerlink" title="GC 垃圾回收"></a>GC 垃圾回收</h2><h4 id="判断对象是否需要回收"><a href="#判断对象是否需要回收" class="headerlink" title="判断对象是否需要回收"></a>判断对象是否需要回收</h4><ul>
+<li>引用计数法：难解决对象循环引用问题</li>
+<li>根搜索法（可达性算法）：从GC Roots对象开始向下搜索，如果一个对象到GC Roots对象没有关联，则可以回收。可最为GC Roots的对象有：<ul>
+<li>虚拟机中的局部变量</li>
+<li>方法区或堆中的静态变量、常量引用对象</li>
+<li>本地方法引用对象</li>
+</ul>
+</li>
+</ul>
+<h4 id="GC-回收算法"><a href="#GC-回收算法" class="headerlink" title="GC 回收算法"></a>GC 回收算法</h4><ul>
+<li>标记-清除算法：先标记需要清除对象，然后遍历清除。不需要移动对象，缺点是容易产生内存碎片。</li>
+<li>复制算法：将可用内存分为两块，把存活对象复制到另一块内存上，再把第一块内存所有对象清除。不易产生内存碎片，每次只需回收半个区，但同时内存空间也缩减为原来的一半；算法效率和存活对象的树木相关，存活对象越多，效率越低。</li>
+<li>标记-整理算法：结合“标记-清除”和“复制”两个算法的优点，将标记的存活对象都向一端移动，清理端边界以外的内存</li>
+<li>分代收集算法：目前大部分Java虚拟机垃圾收集器采用的算法。根据对象的生命周期将内存划分为多个的区域，不同区域适用不同的收集算法。<ul>
+<li>年轻代：一般大量对象产生快，消亡也快。采用复制算法进行清理，将新生代内存分为2部分，1部分 Eden区较大，1部分Survivor比较小，并被划分为两个等量的部分。每次进行清理时，将Eden区和一个Survivor中仍然存活的对象拷贝到 另一个Survivor中，然后清理掉Eden和刚才的Survivor。</li>
+<li>老年代：存储的对象比年轻代多得多，而且不乏大对象。采用标记-整理算法，标记出仍然存活的对象（存在引用的），将所有存活的对象向一端移动，以保证内存的连续。<br> 在发生Minor GC时，虚拟机会检查每次晋升进入老年代的大小是否大于老年代的剩余空间大小，如果大于，则直接触发一次Full GC，否则，就查看是否设 置了-XX:+HandlePromotionFailure（允许担保失败），如果允许，则只会进行MinorGC，此时可以容忍内存分配失败；如果不允许，则仍然进行Full GC（这代表着如果设置-XX:+Handle PromotionFailure，则触发MinorGC就会同时触发Full GC，哪怕老年代还有很多内存，所以，最好不要这样做）。</li>
+<li>永久代（JDK1.8移除）：常量池中的常量和无用的类信息回收。永久代回收不是必须的，可以通过参数来设置是否对类进行回收。HotSpot提供-Xnoclassgc进行控制。</li>
+</ul>
+</li>
+</ul>
+<h4 id="GC类型"><a href="#GC类型" class="headerlink" title="GC类型"></a>GC类型</h4><ul>
+<li>Minor GC：从年轻代空间（包括 Eden 和 Survivor 区域）回收内存被称为 Minor GC；</li>
+<li>Full GC（Major GC）：Major GC 是清理永久代。Full GC 是清理整个堆空间—包括年轻代和永久代，事实许多 Major GC 是由 Minor GC 触发的，所以很多情况下将这两种 GC 分离是不太可能的。知道 Full GC 就行了。</li>
+</ul>
+<h2 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h2><h4 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h4><p>新生代收集器，使用停止复制算法，使用一个线程进行GC，其它工作线程暂停。使用-XX:+UseSerialGC可以使用Serial+Serial Old模式运行进行内存回收（这也是虚拟机在Client模式下运行的默认值）；</p>
+<h4 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h4><p>新生代收集器，使用停止复制算法，Serial收集器的多线程版，用多个线程进行GC，其它工作线程暂停，关注缩短垃圾收集时间。使用-XX:+UseParNewGC开关来控制使用ParNew+Serial Old收集器组合收集内存；使用-XX:ParallelGCThreads来设置执行内存回收的线程数；</p>
+<h4 id="Parallel-Scavenge-收集器"><a href="#Parallel-Scavenge-收集器" class="headerlink" title="Parallel Scavenge 收集器"></a>Parallel Scavenge 收集器</h4><p>新生代收集器，使用停止复制算法，关注CPU吞吐量，即运行用户代码的时间/总时间；</p>
+<h4 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h4><p>老年代收集器，单线程收集器，使用标记-整理算法；</p>
+<h4 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h4><p>老年代收集器，多线程，多线程机制与Parallel Scavenge差不错，使用标记-整理算法；</p>
+<h4 id="CMS（Concurrent-Mark-Sweep）收集器"><a href="#CMS（Concurrent-Mark-Sweep）收集器" class="headerlink" title="CMS（Concurrent Mark Sweep）收集器"></a>CMS（Concurrent Mark Sweep）收集器</h4><p>老年代收集器，致力于获取最短回收停顿时间，使用标记清除算法，多线程，优点是并发收集（用户线程可以和GC线程同时工作），停顿小。使用-XX:+UseConcMarkSweepGC进行ParNew+CMS+Serial Old进行内存回收，优先使用ParNew+CMS（原因见后面），当用户线程内存不足时，采用备用方案Serial Old收集。<br>CMS收集的方法是：先3次标记，再1次清除，3次标记中前两次是初始标记和重新标记（此时仍然需要停止（stop the world））。</p>
+<ul>
+<li>初始标记（Initial Remark）是标记GC Roots能关联到的对象（即有引用的对象），停顿时间很短；</li>
+<li>并发标记（Concurrent remark）是执行GC Roots查找引用的过程，不需要用户线程停顿；</li>
+<li>重新标记（Remark）是在初始标记和并发标记期间，有标记变动的那部分仍需要标记。<br>所以加上这一部分标记的过程，停顿时间比并发标记小得多，但比初始标记稍长。在完成标记之后，就开始并发清除，不需要用户线程停顿。<br>在CMS清理过程中，只有初始标记和重新标记需要短暂停顿，并发标记和并发清除都不需要暂停用户线程，因此效率很高，很适合高交互的场合。<br>CMS也有缺点，它需要消耗额外的CPU和内存资源，在CPU和内存资源紧张，CPU较少时，会加重系统负担（CMS默认启动线程数为(CPU数量+3)/4）。</li>
+</ul>
+<h4 id="G1（Garbage-First）收集器"><a href="#G1（Garbage-First）收集器" class="headerlink" title="G1（Garbage-First）收集器"></a>G1（Garbage-First）收集器</h4><p>G1是一个分代的，增量的，并行与并发的标记-复制垃圾回收器。它的设计目标是为了适应现在不断扩大的内存和不断增加的处理器数量，进一步降低暂停时间（pause time），同时兼顾良好的吞吐量。</p>
+<ul>
+<li>支持多CPU和垃圾回收线程</li>
+<li>整体采用标记-整理算法，局部是通过是通过复制算法，不会产生内存碎片（与CMS相比，CMS标记的时候也有可能产生垃圾，会有内存碎片）</li>
+<li>宏观上看 G1 之中不再区分年轻代和老年代，内存划分为多个独立的子区域。但其本身依然在小范围内要进行年轻代和老年代的区分，保留了新生代和老年代</li>
+<li>在主线程暂停的情况下，使用并行收集</li>
+<li>在主线程运行的情况下，使用并发收集</li>
+</ul>
+<h2 id="JVM-调优"><a href="#JVM-调优" class="headerlink" title="JVM 调优"></a>JVM 调优</h2><p>JVM调优是比较高深的学问，包括设置合理的内存参数，选择合理垃圾回收器甚至修改 JVM 代码等等。在一般项目中很少会去做具体调优。比较常用简单的优化：</p>
+<ul>
+<li>堆设置合理的-Xmx 和-Xms大小，一般两个值设为一样，避免每次 GC 后调整堆的大小；</li>
+<li>设置新生代和老年代比例；</li>
+<li>开启 GC 日志，查看 GC 情况，排查解决 Full GC 频繁原因；</li>
+<li>使用  Jconsole 监控工具监控线程和堆空间分配。</li>
+</ul>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/面试/">面试</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

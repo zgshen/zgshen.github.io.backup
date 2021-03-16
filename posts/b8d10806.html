@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Java 简介和开发环境 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Java基础">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Java 简介和开发环境</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-07-01</span>
+  </div>
+  <div class="post-content">
+    <p>一、定义与特点<br>定义：Java是一门面向对象编程语言，不仅吸收了C++语言的各种优点，还摒弃了C++里难以理解的多继承、指针等概念，因此Java语言具有功能强大和简单易用两个特征。Java语言作为静态面向对象编程语言的代表，极好地实现了面向对象理论，允许程序员以优雅的思维方式进行复杂的编程。[Java疯狂讲义]<br>特点：主要特点是面向对象和可移植等等，广泛应用于web应用程序(JavaEE相关)、嵌入式(安卓相关)，桌面程序、分布式系统等等。<a id="more"></a><br>二、开发工具和开发环境<br>JDK：Java开发包或Java开发工具，编写Java程序必须，已包含JRE。<br>JRE：Java运行环境，运行编写完毕的Java程序。<br>JDK的安装(Windows系统,Java8)<br>1、首先到oracle官网下载与计算机系统对应的Java SE的JDK即可。<br>2、安装、配置环境变量<br>配置JAVA_HOME的环境变量：<br>新建JAVA_HOME一个变量，路径为JDK的安装路径，指定到jdk文件夹<br><img src="http://img.blog.csdn.net/20160701013707829" alt="这里写图片描述"><br>jdk的版本是1.8，在1.6版本之后的jdk都不必配置classpath环境变量了。<br>3、基本命令<br>win+r运行cmd，输入java命令，可以看到各种选项命令<br><img src="http://img.blog.csdn.net/20160703095547077" alt="这里写图片描述"></p>
+<p>输入java -version可以看到当前安装的jdk版本信息<br><img src="http://img.blog.csdn.net/20160701014317597" alt="这里写图片描述"></p>
+<p>javac命令，各种编译选项<br><img src="http://img.blog.csdn.net/20160703095933655" alt="这里写图片描述"><br>三、基本数据类型<br>1、Java有八种基本数据类型，包括byte字节类型、int整形、short短整形、long长整形、char字符型、float浮点型(单精度)、double双精度类型、boolean布尔型。<br>2、基本知识<br>一个字节等于8位，一个字节等于256个数，就是-128到127一共256。<br>kB就是kBytes<br>Bytes就是“字节”的意思！<br>K就是千的意思，因为计算机是通过二进制来计算，10个1正好是1024<br>1111111111（二进制）=1024（十进制）<br>1Bytes（字节）=8bit（比特）<br>一个英文字母或一个阿拉伯数字就是一个字符，占用一个字节<br>一个汉字就是两个字符，占用两个字节。<br>3、数据类型转换<br>byte-&gt;short<br>char-&gt;int-&gt;long<br>float-&gt;double<br>int-&gt;float<br>long-&gt;double<br>范围小的转到范围大的<br>范围大的转换到范围小的会失去精度</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Java基础/">Java基础</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

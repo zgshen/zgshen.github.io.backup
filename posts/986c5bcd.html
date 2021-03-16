@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>RESTful API开发的简单应用 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Web技术">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">RESTful API开发的简单应用</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2017-09-02</span>
+  </div>
+  <div class="post-content">
+    <p>在很早之前接触 Spring MVC 的时候，都知道 Spring MVC 支持 RESTful 风格API的开发，但对于 RESTful 只是有个模糊的认识，以至于甚至在开发写出来的接口其实不符合 RESTful 的要求。</p>
+<h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>REST 的全称是 Resource Representational State Transfer ，资源以某种表现形式进行状态转移<br>Resource：资源，即数据；<br>Representational：某种表现形式，比如用JSON，XML，JPEG等；<br>State Transfer：状态变化。通过HTTP动词实现。<br><a id="more"></a><br>HTTP动词有如下几个：</p>
+<ul>
+<li>GET    用来获取资源，</li>
+<li>POST  用来新建资源（也可以用于更新资源），</li>
+<li>PUT    用来更新资源，</li>
+<li>DELETE  用来删除资源</li>
+</ul>
+<p>在RESTful API中，URL中只使用名词来指定资源，原则上不使用动词，并且一般使用复数，比如 GET 操作 <a href="https://v1/users/1" target="_blank" rel="noopener">https://v1/users/1</a> 来获取用户id为1的信息资源，禁止使用 <a href="http://v1/getUserById" target="_blank" rel="noopener">http://v1/getUserById</a> 、 <a href="http://v1/deleteUser" target="_blank" rel="noopener">http://v1/deleteUser</a> 之类的url。</p>
+<h5 id="用处"><a href="#用处" class="headerlink" title="用处"></a>用处</h5><p>一种技术的存在肯定是为了解决一些问题而诞生的，REST是一种软件架构模式，通过使用RESTful 风格的 API 用来解决多端（PC、Android、IOS）共用一套统一的 API ，避免重复开发。</p>
+<h5 id="在-SpringMVC-中的应用"><a href="#在-SpringMVC-中的应用" class="headerlink" title="在 SpringMVC 中的应用"></a>在 SpringMVC 中的应用</h5><p>用 SpringMVC 可以开发 restful 风格的restful api，以 Spring Boot 为基本框架，这里写一个基本的 controller 类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/users"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"&#123;id&#125;"</span>, method=RequestMethod.GET)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUserById</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> String userId) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ResultUtil.success(userService.getUserById(userId), <span class="string">"操作成功"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"&#123;id&#125;"</span>, method=RequestMethod.PUT)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">updateUser</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> String userId) </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = userService.updateUser(userId);</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">1</span>==num)&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultUtil.success(<span class="string">"操作成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">return</span> ResultUtil.error(<span class="string">"操作失败"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(method=RequestMethod.POST)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">insertUser</span><span class="params">(String userCode, String userName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = userService.insertUser(userCode, userName);</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">1</span>==num)&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultUtil.success(<span class="string">"操作成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">return</span> ResultUtil.error(<span class="string">"操作失败"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value=<span class="string">"&#123;id&#125;"</span>, method=RequestMethod.DELETE)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">deleteUser</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> String userId) </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> num = userService.deleteUser(userId);</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">1</span>==num)&#123;</span><br><span class="line">            <span class="keyword">return</span> ResultUtil.success(<span class="string">"操作成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">return</span> ResultUtil.error(<span class="string">"操作失败"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ResultUtil 封装返回数据格式，这里只是一个简单的封装<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ResultUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String SUCCESS = <span class="string">"success"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String MSG = <span class="string">"msg"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String DATA = <span class="string">"data"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">success</span><span class="params">(String msg)</span></span>&#123;</span><br><span class="line">        Map&lt;String,Object&gt; result = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">        result.put(SUCCESS, <span class="keyword">true</span>);</span><br><span class="line">        result.put(MSG, msg);</span><br><span class="line">        result.put(DATA, <span class="keyword">new</span> Object());</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">success</span><span class="params">(Object data, String msg)</span></span>&#123;</span><br><span class="line">        Map&lt;String,Object&gt; result = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">        result.put(SUCCESS, <span class="keyword">true</span>);</span><br><span class="line">        result.put(MSG, msg);</span><br><span class="line">        result.put(DATA, data);</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">error</span><span class="params">(String msg)</span></span>&#123;</span><br><span class="line">        Map&lt;String,Object&gt; result = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">        result.put(SUCCESS, <span class="keyword">false</span>);</span><br><span class="line">        result.put(MSG, msg);</span><br><span class="line">        result.put(DATA, <span class="keyword">new</span> Object());</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(result);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">error</span><span class="params">(Object data, String msg)</span></span>&#123;</span><br><span class="line">        Map&lt;String,Object&gt; result = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">        result.put(SUCCESS, <span class="keyword">false</span>);</span><br><span class="line">        result.put(MSG, msg);</span><br><span class="line">        result.put(DATA, data);</span><br><span class="line">        <span class="keyword">return</span> JSON.toJSONString(result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对应的请求url为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查询、更新、删除： /users/1</span><br><span class="line">插入： /users</span><br></pre></td></tr></table></figure></p>
+<p>有时需要管理版本号会把版本号写在url，比如 <code>v1/users/1</code>、 <code>v2/users/1</code> 。至于请求是什么类型的，可以在请求在head中设置，如果是ajax请求则设置比较简单<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    url: <span class="string">'/users/1'</span>,</span><br><span class="line">    type: <span class="string">'get'</span>,<span class="comment">//put、delete</span></span><br><span class="line">    success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(data)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">    url: <span class="string">'/users'</span>,</span><br><span class="line">    type: <span class="string">'post'</span>,</span><br><span class="line">    data: &#123;</span><br><span class="line">        userCode: <span class="string">'test'</span>,</span><br><span class="line">        userName: <span class="string">'测试名字'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(data)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>RESTful API 的开发涉及许多细节和技术实现，实际开发中的应用会可能会用到一些封装库和框架，这里不做深入了解，只是简单的记录自己的一些基本认识，相关的知识参考了以下的链接。</p>
+<p>#####相关参考链接</p>
+<ul>
+<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="noopener">REST的出处论文 - 作者Roy Fielding</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="noopener">RESTful API 设计指南 - 阮一峰的网络日志</a></li>
+<li><a href="https://zhihu.com/question/28557115/answer/48094438" target="_blank" rel="noopener">怎样用通俗的语言解释REST，以及RESTful？ - 回答作者: 覃超</a></li>
+</ul>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Web技术/">Web技术</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

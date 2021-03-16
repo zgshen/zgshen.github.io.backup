@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>字符相关 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Java基础">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">字符相关</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-07-09</span>
+  </div>
+  <div class="post-content">
+    <p>一、字符类型<br>char是Java的一种基本数据类型，也是Java中的保留字。char在Java中占两个字节，无符号类型，是16位二进制Unicode字符。<br>char是类型表示的是字符，不是字符串；<br>char类型变量值只能用单引号来表示，不可使用双引号；<br>即表示单引号内的单个字符。<a id="more"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author shen</span><br><span class="line"> * @desc char test</span><br><span class="line"> * @date 2016年7月15日</span><br><span class="line"> */</span><br><span class="line">public class CharTest &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		//单引号内的单个字符</span><br><span class="line">		char test = &apos;C&apos;;</span><br><span class="line">		System.out.println(test);</span><br><span class="line">		</span><br><span class="line">		//数组</span><br><span class="line">		char cha[] = &#123;&apos;J&apos;,&apos;a&apos;,&apos;v&apos;,&apos;a&apos;&#125;;</span><br><span class="line">		System.out.println(cha);</span><br><span class="line">		</span><br><span class="line">		//Unicode编码，每一个字符用16位2进制数标识</span><br><span class="line">		char ucode = &apos;\u4F60&apos;;//20320</span><br><span class="line">		char hao = &apos;\u597d&apos;;//22909</span><br><span class="line">		</span><br><span class="line">		System.out.print(ucode);</span><br><span class="line">		System.out.println(hao);</span><br><span class="line">		</span><br><span class="line">		//转换成的对应值</span><br><span class="line">		System.out.println( ucode + hao);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">由于其编码方式，编码方式最多有65536种，远不足以使用，以及在数据库存储的一些问题，在一般情况下，char在java中的实际使用比较少，也并不推荐使用。</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20160720005324976" alt="这里写图片描述"></p>
+<p>二、字符串类<br>1、String<br>(1)String类表示字符串，是字符串常量<a style="font-size:2px" href="http://baike.baidu.com/link?url=oXsjqHFvRV9jz1IVzi2ootperjJLDiv14Bi5m3f08Pg7qy4W0PTNOBMC422g_hEFMiU-rrpGjDAGHxHgLNKpdK" target="_blank">(另:常量池)</a>，其值在创建后不能改变，因此Stirng对象创建后是不可变的，直至到被GC回收。<br>(2)创建String对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class StringTest &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		String str1 = &quot;Java&quot;;//直接创建</span><br><span class="line">		</span><br><span class="line">		String str2 = new String();//面向对象基本创建方法,有时浪费内存</span><br><span class="line">		str2 = &quot;C++&quot;;</span><br><span class="line">		</span><br><span class="line">		String str3 = new String(&quot;C&quot;);//String类提供许多构造创建方法和其他方法,详JDK源码</span><br><span class="line">		</span><br><span class="line">		System.out.println(str1+&quot;--&quot;+str2+&quot;--&quot;+str3);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(3)常见方法<br>I.获取字符串长度与某个字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;Java Code&quot;;</span><br><span class="line">str.charAt(0);//获取某个下标对应字符</span><br><span class="line">str.length();//字符串长度</span><br></pre></td></tr></table></figure>
+<p>II.str.compareTo方法<br>    该方法的作用是比较两个字符串的大小，比较的原理是依次比较每个字符的字符编码。首先比较两个字符串的第一个字符，如果第一个字符串的字符编码大于第二个的字符串的字符编码，则返回大于0的值，如果小于则返回小于0的值，如果相等则比较后续的字符，如果两个字符串中的字符编码完全相同则返回0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String data1 = &quot;Javi&quot;;</span><br><span class="line">String data2  = &quot;Java&quot;;</span><br><span class="line">int value = data1.compareTo(data2);</span><br></pre></td></tr></table></figure>
+<p>III.截取方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;Java Code&quot;;</span><br><span class="line">String subStr = str.substring(7);//截取得到从某个下标之后的字符串</span><br><span class="line">String sub = str.substring(0, 5);//截取区间之内的字符串</span><br></pre></td></tr></table></figure>
+<p>IV.连接方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String st1 = &quot;Java&quot;;</span><br><span class="line">String st2 = &quot;Code&quot;;</span><br><span class="line">String st = st1.concat(st2);//连接组成一个新的字符串JavaCode</span><br><span class="line">String stt = st1+st2;//更直接的做法JavaCode</span><br><span class="line">String sst = st1+007;//参与连接中有字符串按字符串连接Java007</span><br></pre></td></tr></table></figure>
+<p>V.查找方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;Java Code&quot;;</span><br><span class="line">int i = str.indexOf(&apos;o&apos;);//某个在字符串第一次出现的下标,不存在则返回-1</span><br><span class="line">int j = str.indexOf(&apos;o&apos;, 7);//从第几个字符开始查,返回下标，不存在则返回-1</span><br></pre></td></tr></table></figure>
+<p>VI.replace方法<br>    该方法的作用是替换字符串中所有指定的字符，然后生成一个新的字符串。经过该方法调用以后，原来的字符串不发生改变。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String str = &quot;Java Code&quot;;</span><br><span class="line">String s = str.replace(&quot;Java&quot;, &quot;C++&quot;);//把Java代替成C++</span><br></pre></td></tr></table></figure></p>
+<p>VII.split方法<br>    以特定的分隔符分隔字符串，生成一个 数组。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String data = &quot;java,c++,c,c#&quot;;</span><br><span class="line">String arr[] = data.split(&quot;,&quot;);</span><br><span class="line">for(int k = 0;k&lt;arr.length;k++)&#123;</span><br><span class="line">	System.out.println(arr[k]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、Stringbuffer<br>    同样是字符串类，Stringbuffer 是字符串变量，实现方式与String有所不同，在进行处理字符串时不生成新的对象。在存储和操作字符串操作比String更合适。<br>I.字符串拼接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer data = new StringBuffer(&quot;The&quot;);//创建对象</span><br><span class="line">StringBuffer data1 = data.append(&quot; Great&quot;);//拼接方法</span><br><span class="line">String str = &quot; Wall&quot;;</span><br><span class="line">data1.append(str).append(&quot;!&quot;);</span><br></pre></td></tr></table></figure>
+<p>II.deleteCharAt方法</p>
+<p><img src="http://img.blog.csdn.net/20160724035037353" alt="这里写图片描述"><br>此外，字符串操作相关的方法还有insert插入、reverse反转倒序、setCharAt修改某个下标上的字符、trimToSize将StringBuffer对象的中存储空间缩小到和字符串长度一样的长度，减少空间的浪费。<br>3、Stringbuilder<br>    Stringbuilder和StringBuffer基本类似，相关方法也一样</p>
+<p>4、String、StringBuffer和Stringbuilder的具体区别<br>[以下复制,来自其他博主总结]<br>String：字符串常量<br>StringBuffer：字符创变量，线程安全<br>StringBuilder：字符创变量，非线程安全</p>
+<p>如果要操作少量的数据用String<br>单线程操作字符串缓冲区下操作大量数据StringBuilder<br>多线程操作字符串缓冲区下操作大量数据StringBuffer<br>5、其他<a href="http://blog.csdn.net/renfufei/article/details/14448147" target="_blank">[引用]</a><br>I.字符串比较”==”与equal()方法<br>“==” 判断两个引用的是不是同一个内存地址(同一个物理对象).<br>equals 判断两个字符串的值是否相等.<br>除非你想判断两个string引用是否同一个对象,否则应该总是使用 equals()方法.<br>II.密码及其他问题上char[]优先于String原因<br>    String是不可变对象, 意思是一旦创建,那么整个对象就不可改变. 即使新手觉得String引用变了,实际上只是(指针)引用指向了另一个(新的)对象.<br>    而程序员可以明确地对字符数组进行修改,因此敏感信息(如密码)不容易在其他地方暴露(只要你用完后对char[]置0).</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Java基础/">Java基础</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>继承、多态、封装、抽象类与接口 - zgshen&#39;s note</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="Java基础">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="zgshen&#39;s note" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">zgshen&#39;s note</a>
+    <div class="subtitle"></div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">主页</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/about" class="menu-item-link">关于</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="https://www.google.com/search?q=site:zguishen.com/" class="menu-item-link">搜索</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">继承、多态、封装、抽象类与接口</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-09-05</span>
+  </div>
+  <div class="post-content">
+    <p>作为一门面向对象语言，继承和多态是Java重要的特性。继承封装了一些公共特性，实现代码复用，减少代码冗余；多态可以动态调整对象的调用，降低对象之间的依存关系；接口是一种规范，可以通过接口实现多继承的功能。<br>一、继承<br>     利用继承，人们可以基于已存在的类构造一个新类。继承已存在的类就是复用（继承）这些类的方法和域。在此基础上，还可以添加一些新的方法和域，以满足新的需求。这是Java程序设计中的一项核心技术。[java核心技术]<br>     新建一个人物父类<a id="more"></a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line"></span><br><span class="line">	private int age;</span><br><span class="line">	private String name;</span><br><span class="line">	</span><br><span class="line">	public Person(int age, String name)&#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void info()&#123;</span><br><span class="line">		System.out.println(age);</span><br><span class="line">		System.out.println(name);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Teacher子类继承Person父类，关键字extends表示继承，extends表明正在构造的新类派生于一个已存在的类。已存在的类被称为超类（superclass）、基类（base class）或父类（parent class）；新类被称为子类（subclass）、派生类（derived class）或孩子类（child class）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public class Teacher extends Person &#123;</span><br><span class="line"></span><br><span class="line">	//默认实现无参构造并可以不写，如果父类存在带参构造，则需要显式实现此构造</span><br><span class="line">	public Teacher(int age, String name) &#123;</span><br><span class="line">		super(22, &quot;shen&quot;);</span><br><span class="line">		// TODO Auto-generated constructor stub</span><br><span class="line">		super.info();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	//重写父类方法</span><br><span class="line">	@Override</span><br><span class="line">	public void info()&#123;</span><br><span class="line">		System.out.println(&quot;rewrite...&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		Teacher t = new Teacher(20, &quot;tutu&quot;);</span><br><span class="line">		t.info();//子类拥有所有父类的成员变量，但private的成员变量没有访问权限</span><br><span class="line">		//t.age//private变量不可访问</span><br><span class="line">		</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line">输出结果：</span><br><span class="line">22</span><br><span class="line">shen</span><br><span class="line">rewrite...</span><br></pre></td></tr></table></figure>
+<p>二、多态<br>实现多态有三个条件：要有继承、要有重写、父类引用指向子类对象。<br>父类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Animal &#123;</span><br><span class="line">	public void eat()&#123;</span><br><span class="line">		System.out.println(&quot;eat food&quot;);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void walk()&#123;</span><br><span class="line">		System.out.println(&quot;walk alone&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>子类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public class Dog extends Animal &#123;</span><br><span class="line">	//重写父类方法</span><br><span class="line">	@Override</span><br><span class="line">	public void eat()&#123;</span><br><span class="line">		System.out.println(&quot;eat bone&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public void walk(String dog1)&#123;</span><br><span class="line">		dog1 = &quot;tom&quot;;</span><br><span class="line">		System.out.println(&quot;walk with &quot; + dog1);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		Animal dog = new Dog();//向上转型，父类引用指向子类对象</span><br><span class="line">		dog.eat();</span><br><span class="line">		dog.walk();</span><br><span class="line">		//dog.walk(&quot;jane&quot;);//只能调用父类存在的方法</span><br><span class="line">		</span><br><span class="line">		Dog dd = (Dog)dog;//向下转型</span><br><span class="line">		dd.walk();</span><br><span class="line">		dd.walk(&quot;jane&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出结果：</span><br><span class="line">eat bone</span><br><span class="line">walk alone</span><br><span class="line">walk alone</span><br><span class="line">walk with tom</span><br></pre></td></tr></table></figure>
+<p>多态可以使程序有良好的扩展，并可以对所有类的对象进行通用处理。<br>三、封装<br>在面向对象程式设计方法中，封装指一种将抽象性函式接口的实作细节部份包装、隐藏起来的方法。通常都使用getter和setter方法来实现，其他类要访问本类的私有成员变量都需要通过getter和setter方法。<br>例<br>实体类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class Person &#123;</span><br><span class="line"></span><br><span class="line">	private int age;</span><br><span class="line">	private String name;</span><br><span class="line">	public int getAge() &#123;</span><br><span class="line">		return age;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setAge(int age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getName() &#123;</span><br><span class="line">		return name;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">	</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		Person t = new Person();</span><br><span class="line">		t.setAge(20);</span><br><span class="line">		t.setName(&quot;shen&quot;);</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;Age:&quot; + t.getAge() + &quot; name:&quot; + t.getName());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line">输出：</span><br><span class="line">Age:20 name:shen</span><br></pre></td></tr></table></figure>
+<p>四、抽象与接口<br>1、我们知道，在面向对象世界中，所有的对象都是通过类来描述的，但是并不是所有的类都是来描述对象的。如果一个类没有足够的信息来描述一个具体的对象，而需要其他具体的类来支撑它，那么这样的类我们称它为抽象类。<br>例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Animal &#123;</span><br><span class="line">	</span><br><span class="line">	private String name;</span><br><span class="line">	private float weight;</span><br><span class="line">	</span><br><span class="line">	public Animal(String name, float weight)&#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">		this.weight = weight;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	abstract void run();//抽象类不一定有抽象方法，但包含抽象方法的类一定要被声明为抽象类</span><br><span class="line">	</span><br><span class="line">	public void eat()&#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>继承：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class Cat extends Animal&#123;</span><br><span class="line">	</span><br><span class="line">	public Cat(String name, float weight) &#123;</span><br><span class="line">		super(name, weight);</span><br><span class="line">		// TODO Auto-generated constructor stub</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	//覆盖抽象方法</span><br><span class="line">	@Override</span><br><span class="line">	void run() &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		System.out.println(&quot;run fast&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">		</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		</span><br><span class="line">		//Animal cat = new Animal(&quot;tom&quot;, 20f);//错误,抽象类不能实例化</span><br><span class="line">		Cat cat = new Cat(&quot;tom&quot;, 20f);</span><br><span class="line">		cat.run();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另注：<br>如果一个类包含抽象方法，那么该类必须是抽象类。<br>任何子类必须重写父类的抽象方法，或者声明自身为抽象类。<br>2、接口<br>接口是抽象方法的集合。接口并不是类，一个类通过继承接口的方式，从而来继承接口的抽象方法。<br>实现接口必须覆盖全部抽象方法，跟抽象类相似。但是java中不能通过extends实现多继承，可以通过实现多个接口来达到多继承的目的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public interface Person &#123;</span><br><span class="line">	public void eat();</span><br><span class="line">	public void say();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Student implements Person &#123;</span><br><span class="line">	@Override</span><br><span class="line">	public void eat() &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	@Override</span><br><span class="line">	public void say() &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注：<br>接口是隐式抽象的，当声明一个接口的时候，不必使用abstract关键字。<br>接口中每一个方法也是隐式抽象的，声明时同样不需要abstract关键子。<br>接口中的方法都是公有的。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/Java基础/">Java基础</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2021
+  <span class="author">
+    zguishen
+  </span>
+</footer>
+    </div>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-106347761-1');
+	</script>
+  </body>
+</html>
